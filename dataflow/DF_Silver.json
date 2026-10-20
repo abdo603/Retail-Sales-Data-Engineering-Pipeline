@@ -1,0 +1,70 @@
+{
+	"name": "DF_Silver",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze",
+						"type": "DatasetReference"
+					},
+					"name": "BronzeSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver",
+						"type": "DatasetReference"
+					},
+					"name": "SilverSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "CleanNulls"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          date as long,",
+				"          store_nbr as long,",
+				"          family as string,",
+				"          unit_sales as double,",
+				"          onpromotion as byte,",
+				"          city as string,",
+				"          state as string,",
+				"          store_type as string,",
+				"          perishable as byte,",
+				"          transactions as long,",
+				"          oil_price as double,",
+				"          day_type as string,",
+				"          Event_Scale as string,",
+				"          locale_name as string,",
+				"          temperature as double,",
+				"          precipitation as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> BronzeSource",
+				"CleanNulls filter(unit_sales > 0) ~> filter1",
+				"BronzeSource derive(Event_Scale = iif(isNull(Event_Scale) || Event_Scale == 'Non', 'None', Event_Scale),",
+				"          locale_name = iif(isNull(locale_name) || locale_name == 'Non', 'Unknown', locale_name)) ~> CleanNulls",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SilverSink"
+			]
+		}
+	}
+}

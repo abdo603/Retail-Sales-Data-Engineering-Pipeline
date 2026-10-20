@@ -1,0 +1,85 @@
+{
+	"name": "DF_Bronze",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Raw",
+						"type": "DatasetReference"
+					},
+					"name": "RawSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze",
+						"type": "DatasetReference"
+					},
+					"name": "BronzeSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          date as long,",
+				"          store_nbr as long,",
+				"          family as string,",
+				"          unit_sales as double,",
+				"          onpromotion as byte,",
+				"          city as string,",
+				"          state as string,",
+				"          store_type as string,",
+				"          perishable as byte,",
+				"          transactions as long,",
+				"          oil_price as double,",
+				"          day_type as string,",
+				"          {Event Scale} as string,",
+				"          locale_name as string,",
+				"          temperature as double,",
+				"          precipitation as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> RawSource",
+				"RawSource select(mapColumn(",
+				"          date,",
+				"          store_nbr,",
+				"          family,",
+				"          unit_sales,",
+				"          onpromotion,",
+				"          city,",
+				"          state,",
+				"          store_type,",
+				"          perishable,",
+				"          transactions,",
+				"          oil_price,",
+				"          day_type,",
+				"          Event_Scale = {Event Scale},",
+				"          locale_name,",
+				"          temperature,",
+				"          precipitation",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> BronzeSink"
+			]
+		}
+	}
+}

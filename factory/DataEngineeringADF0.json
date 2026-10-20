@@ -1,0 +1,15 @@
+{
+	"name": "DataEngineeringADF0",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "swedencentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e1e411b5-0d6e-4477-ad75-2b3a1708af31",
+		"tenantId": "0bc92751-071a-4e2c-a48b-633206fef374"
+	}
+}

@@ -1,0 +1,74 @@
+{
+	"name": "DF_Gold",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver",
+						"type": "DatasetReference"
+					},
+					"name": "SilverSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Gold",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          date as long,",
+				"          store_nbr as long,",
+				"          family as string,",
+				"          unit_sales as double,",
+				"          onpromotion as byte,",
+				"          city as string,",
+				"          state as string,",
+				"          store_type as string,",
+				"          perishable as byte,",
+				"          transactions as long,",
+				"          oil_price as double,",
+				"          day_type as string,",
+				"          Event_Scale as string,",
+				"          locale_name as string,",
+				"          temperature as double,",
+				"          precipitation as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> SilverSource",
+				"SilverSource aggregate(groupBy(family,",
+				"          state,",
+				"          store_type,",
+				"          date,",
+				"          store_nbr,",
+				"          day_type,",
+				"          city,",
+				"          onpromotion),",
+				"     Total_Sales = sum(unit_sales),",
+				"          Total_Transactions = sum(transactions),",
+				"          Average_Oil_Price = avg(oil_price)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

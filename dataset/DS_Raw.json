@@ -1,0 +1,85 @@
+{
+	"name": "DS_Raw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS_Gen2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "raw"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "date",
+				"type": "INT64"
+			},
+			{
+				"name": "store_nbr",
+				"type": "INT64"
+			},
+			{
+				"name": "family",
+				"type": "UTF8"
+			},
+			{
+				"name": "unit_sales",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "onpromotion",
+				"type": "INT_8"
+			},
+			{
+				"name": "city",
+				"type": "UTF8"
+			},
+			{
+				"name": "state",
+				"type": "UTF8"
+			},
+			{
+				"name": "store_type",
+				"type": "UTF8"
+			},
+			{
+				"name": "perishable",
+				"type": "INT_8"
+			},
+			{
+				"name": "transactions",
+				"type": "INT64"
+			},
+			{
+				"name": "oil_price",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "day_type",
+				"type": "UTF8"
+			},
+			{
+				"name": "Event Scale",
+				"type": "UTF8"
+			},
+			{
+				"name": "locale_name",
+				"type": "UTF8"
+			},
+			{
+				"name": "temperature",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "precipitation",
+				"type": "DOUBLE"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
